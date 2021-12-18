@@ -1,8 +1,10 @@
 <% status = transaction_status(@transaction) %>
+<% error_in_internal_tx = @transaction.has_error_in_iternal_txs %>
 <div class="tile tile-type-<%= type_suffix(@transaction) %> fade-in <%= status_class(@transaction) %>" data-test="<%= type_suffix(@transaction) %>" data-identifier-hash="<%= @transaction.hash %>">
   <div class="row tile-body" data-selector="token-transfers-toggle" data-test="chain_transaction">
     <!-- Color Block -->
     <div class="tile-transaction-type-block col-md-2 d-flex flex-row flex-md-column">
+      
       <span class="tile-label" data-test="transaction_type">
         <%= transaction_display_type(@transaction) %>
       </span>
@@ -58,7 +60,7 @@
         <%= if Enum.any?(remaining_token_transfers) do %>
           <div class="token-tile-view-more">
               <%= link gettext("View More Transfers"), to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-open", "data-test": "token_transfers_expansion" %>
-              <%= link gettext("View Less Transfers"), class: "d-none", to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-close" %>
+              <%= link gettext("View Less Transfers"), class: "d  -none", to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-close" %>
           </div>
         <% end %>
       <% end %>

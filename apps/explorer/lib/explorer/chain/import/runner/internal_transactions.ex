@@ -420,8 +420,8 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
       
       txs_with_error_in_internal_txs = 
         valid_internal_transactions
-        |> Enum.filter(fn internal_tx -> internal_tx[:index] != 0 && !is_nil(internal_tx[:error]))
-        |> Enum.map(fn internal_tx -> internal_tx[:transaction_hash])
+        |> Enum.filter(fn internal_tx -> internal_tx[:index] != 0 && !is_nil(internal_tx[:error]) end)
+        |> Enum.map(fn internal_tx -> internal_tx[:transaction_hash] end)
         |> MapSet.new()
       
       transaction_hashes =
@@ -454,7 +454,7 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
                 timeout,
                 timestamps,
                 first_trace,
-                txs_with_error_in_internal_txs
+                txs_with_error_in_internal_txs,
                 transaction_receipt_from_node
               )
 
@@ -580,7 +580,7 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
         :cumulative_gas_used,
         transaction_receipt_from_node && transaction_receipt_from_node.cumulative_gas_used
       )
-      |> Keyword.put_new(:has_error_in_iternal_txs, if Enum.member?(txs_with_error_in_internal_txs, first_trace.transaction_hash), do: true, else: false)
+      |> Keyword.put_new(:has_error_in_iternal_txs, (if Enum.member?(txs_with_error_in_internal_txs, first_trace.transaction_hash), do: true, else: false))
 
     set_with_gas_used =
       if first_trace.gas_used do

@@ -417,13 +417,13 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
           }
         end)
         |> Enum.filter(fn transaction_hash -> transaction_hash != nil end)
-      
-      txs_with_error_in_internal_txs = 
+
+      txs_with_error_in_internal_txs =
         valid_internal_transactions
         |> Enum.filter(fn internal_tx -> internal_tx[:index] != 0 && !is_nil(internal_tx[:error]) end)
         |> Enum.map(fn internal_tx -> internal_tx[:transaction_hash] end)
         |> MapSet.new()
-      
+
       transaction_hashes =
         valid_internal_transactions
         |> MapSet.new(& &1.transaction_hash)
@@ -535,7 +535,13 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
          txs_with_error_in_internal_txs,
          transaction_receipt_from_node \\ nil
        ) do
-    set = generate_transaction_set_to_update(first_trace, transaction_receipt_from_node, timestamps, txs_with_error_in_internal_txs)
+    set =
+      generate_transaction_set_to_update(
+        first_trace,
+        transaction_receipt_from_node,
+        timestamps,
+        txs_with_error_in_internal_txs
+      )
 
     update_query =
       from(
@@ -563,7 +569,12 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
     end
   end
 
-  def generate_transaction_set_to_update(first_trace, transaction_receipt_from_node, timestamps, txs_with_error_in_internal_txs) do
+  def generate_transaction_set_to_update(
+        first_trace,
+        transaction_receipt_from_node,
+        timestamps,
+        txs_with_error_in_internal_txs
+      ) do
     default_set = [
       created_contract_address_hash: first_trace.created_contract_address_hash,
       error: first_trace.error,
@@ -580,7 +591,10 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
         :cumulative_gas_used,
         transaction_receipt_from_node && transaction_receipt_from_node.cumulative_gas_used
       )
-      |> Keyword.put_new(:has_error_in_iternal_txs, (if Enum.member?(txs_with_error_in_internal_txs, first_trace.transaction_hash), do: true, else: false))
+      |> Keyword.put_new(
+        :has_error_in_iternal_txs,
+        if(Enum.member?(txs_with_error_in_internal_txs, first_trace.transaction_hash), do: true, else: false)
+      )
 
     set_with_gas_used =
       if first_trace.gas_used do

@@ -533,6 +533,7 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
          transaction_receipt_from_node \\ nil
        ) do
     valid_internal_transactions_count = Enum.count(valid_internal_transactions)
+    txs_with_error_in_internal_txs = get_trivial_tx_hashes_with_error_in_internal_tx(valid_internal_transactions)
 
     set =
       generate_transaction_set_to_update(
@@ -551,8 +552,6 @@ defmodule Explorer.Chain.Import.Runner.InternalTransactions do
           set: ^set
         ]
       )
-
-    txs_with_error_in_internal_txs = get_trivial_tx_hashes_with_error_in_internal_tx(valid_internal_transactions)
     
     transaction_hashes_iterator = transaction_hashes_iterator + 1
 

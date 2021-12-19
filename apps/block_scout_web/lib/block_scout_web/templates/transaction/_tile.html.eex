@@ -6,7 +6,7 @@
     <div class="tile-transaction-type-block col-md-2 d-flex flex-row flex-md-column">
       <div>
         <%= if error_in_internal_tx do %>
-          <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html", text: gettext("Error in internal transactions")%>
+          <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html", text: gettext("Error in internal transactions"), additional_classes: ["color-inherit"] %>
         <% end %>
         <span class="tile-label" data-test="transaction_type">
           <%= transaction_display_type(@transaction) %>
@@ -64,7 +64,7 @@
         <%= if Enum.any?(remaining_token_transfers) do %>
           <div class="token-tile-view-more">
               <%= link gettext("View More Transfers"), to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-open", "data-test": "token_transfers_expansion" %>
-              <%= link gettext("View Less Transfers"), class: "d  -none", to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-close" %>
+              <%= link gettext("View Less Transfers"), class: "d-none", to: "#transaction-#{@transaction.hash}", "data-toggle": "collapse", "data-selector": "token-transfer-close" %>
           </div>
         <% end %>
       <% end %>
